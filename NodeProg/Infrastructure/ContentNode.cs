@@ -12,7 +12,7 @@ namespace NodeProg
         public string Content { get; }
         public override string ToString() => "\"" + Content.Replace("\\", "\\\\").Replace("\"", "\\\"") + "\"";
         public override bool Equals(object obj) => Content == (obj as ContentNode)?.Content;
-        public static NodeParseResult? ParseContentNode(int index, string input, IEnumerable<string> stopMarkers)
+        public static NodeParseResult? Parse(int index, string input, IEnumerable<string> stopMarkers)
         {
             var stopMarkerIndex = stopMarkers
                 .Select(stopMarker => (int?)input.IndexOf(stopMarker, index))

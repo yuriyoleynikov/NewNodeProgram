@@ -50,7 +50,7 @@ namespace NodeProg
                         return false;
                 }
         }
-        public static NodeParseResult? TryParseListNode(int index, string input, NodeParseSettings parseSettings)
+        public static NodeParseResult? TryParse(int index, string input, NodeParseSettings parseSettings)
         {
             if (string.Compare(input, index, parseSettings.openMarker, 0, parseSettings.openMarker.Length) == 0)
             {
