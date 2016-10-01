@@ -66,6 +66,7 @@
     <Compile Include="Infrastructure\Node.cs" />
     <Compile Include="Infrastructure\NodeParseResult.cs" />
     <Compile Include="Infrastructure\NodeParseSettings.cs" />
+    <Compile Include="Infrastructure\NumberNode.cs" />
     <Compile Include="NodeProgram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

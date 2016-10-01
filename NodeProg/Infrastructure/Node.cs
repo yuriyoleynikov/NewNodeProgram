@@ -72,14 +72,15 @@ namespace NodeProg
                 namedAssignMarker = "=",
             });
         }
-                
+
         public static NodeParseResult? TryParseNodeInternal(int index, string input, NodeParseSettings parseSettings)
         {
             return
-                ListNode.TryParseListNode(index, input, parseSettings) ??
-                CommentNode.TryParseCommentNode(index, input, parseSettings.commentOpenMarker, parseSettings.commentCloseMarker) ??
-                NamedNode.TryParseNamedNode(index, input, parseSettings) ??
-                ContentNode.ParseContentNode(index, input, new[] { parseSettings.closeMarker, parseSettings.separator, parseSettings.namedCloseMarker });
+                ListNode.TryParse(index, input, parseSettings) ??
+                CommentNode.TryParse(index, input, parseSettings.commentOpenMarker, parseSettings.commentCloseMarker) ??
+                NamedNode.TryParse(index, input, parseSettings) ??
+                NumberNode.TryParse(index, input, new[] { parseSettings.closeMarker, parseSettings.separator, parseSettings.namedCloseMarker }) ??
+                ContentNode.Parse(index, input, new[] { parseSettings.closeMarker, parseSettings.separator, parseSettings.namedCloseMarker });
 
         }
         public static IEnumerable<NodeParseResult> ParseNodesInternal(int index, string input, NodeParseSettings parseSettings)
