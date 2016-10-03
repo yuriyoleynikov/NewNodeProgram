@@ -20,6 +20,8 @@ namespace NodeTests
 
             Node.ParseNodes("123").Should().Equal(new NumberNode(123));
 
+            Node.ParseNodes(" -123a").Should().Equal(new ContentNode(" -123a"));
+
             Node.ParseNodes(" +123, -123a,  -123  ").Should().Equal(new NumberNode(123), new ContentNode(" -123a"), new NumberNode(-123));
 
             Node.ParseNodes("9223372036854775807,9223372036854775808").Should().Equal(new NumberNode(9223372036854775807), new ContentNode("9223372036854775808"));
