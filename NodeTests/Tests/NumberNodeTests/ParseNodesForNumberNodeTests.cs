@@ -13,6 +13,8 @@ namespace NodeTests
             Node.ParseNodes("1,2").Should().Equal(
                 new NumberNode(1),
                 new NumberNode(2));
+            Node.ParseNodes(" ").Should().Equal(
+                new ContentNode(" "));
 
             Node.ParseNodes("           -12").Should().Equal(new NumberNode(-12));
 
