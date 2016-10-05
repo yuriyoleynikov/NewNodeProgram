@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace NodeProg
 {
-    public partial class NumberNode : Node
+    public class NumberNode : Node
     {
         public NumberNode(long value)
         {
@@ -23,7 +23,7 @@ namespace NodeProg
 
             var numberLength = stopMarkerIndex - index;
 
-            var value = TryParseInt64(input, index, numberLength);
+            var value = ParseHelpers.TryParseInt64(input, index, numberLength);
             if (value != null)
                 return new NodeParseResult { Node = new NumberNode(value.Value), StartPosition = index, Length = numberLength };
             return null;
