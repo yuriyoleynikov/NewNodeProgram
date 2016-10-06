@@ -13,11 +13,11 @@ namespace NodeTests
         public void TryParseInt64TestMethod()
         {
             var str = "123,456";
-            new Action(() => ParseHelpers.TryParseInt64(null, 0, 0)).ShouldThrow<FormatException>().WithMessage("input == null");
-            new Action(() => ParseHelpers.TryParseInt64(str, -1, 10)).ShouldThrow<FormatException>().WithMessage("startIndex < 0");
-            new Action(() => ParseHelpers.TryParseInt64(str, 0, -1)).ShouldThrow<FormatException>().WithMessage("length < 0");
-            new Action(() => ParseHelpers.TryParseInt64(str, 20, 0)).ShouldThrow<FormatException>().WithMessage("startIndex > input.Length");
-            new Action(() => ParseHelpers.TryParseInt64(str, 0, 30)).ShouldThrow<FormatException>().WithMessage("length > input.Length");
+            new Action(() => ParseHelpers.TryParseInt64(null, 0, 0)).ShouldThrow<ArgumentNullException>();
+            new Action(() => ParseHelpers.TryParseInt64(str, -1, 10)).ShouldThrow<ArgumentException>();
+            new Action(() => ParseHelpers.TryParseInt64(str, 0, -1)).ShouldThrow<ArgumentException>();
+            new Action(() => ParseHelpers.TryParseInt64(str, 20, 0)).ShouldThrow<FormatException>();
+            new Action(() => ParseHelpers.TryParseInt64(str, 0, 30)).ShouldThrow<FormatException>();
 
             str = " 1 ";
             Assert.AreEqual(ParseHelpers.TryParseInt64(str, 0, str.Length), 1);
@@ -25,10 +25,10 @@ namespace NodeTests
 
             str = "           -12";
             Assert.AreEqual(ParseHelpers.TryParseInt64(str, 0, str.Length), -12);
-                        
+
             str = "           +12     ";
             Assert.AreEqual(ParseHelpers.TryParseInt64(str, 0, str.Length), 12);
-            
+
             str = "123";
             Assert.AreEqual(ParseHelpers.TryParseInt64(str, 0, str.Length), 123);
 
@@ -40,7 +40,7 @@ namespace NodeTests
 
             str = "  9223372036854775807     ";
             Assert.AreEqual(ParseHelpers.TryParseInt64(str, 0, str.Length), 9223372036854775807);
-            
+
             str = "          9223372036854775808      ";
             Assert.AreEqual(ParseHelpers.TryParseInt64(str, 0, str.Length), null);
 
@@ -63,7 +63,11 @@ namespace NodeTests
             Assert.AreEqual(ParseHelpers.TryParseInt64(str, 0, str.Length, false, false), null);
             Assert.AreEqual(ParseHelpers.TryParseInt64(str, 0, str.Length, true, false), null);
             Assert.AreEqual(ParseHelpers.TryParseInt64(str, 0, str.Length, false, true), null);
-            
+
+            new Action(() => ParseHelpers.TryParseInt64(" ", 1, 1)).ShouldThrow<FormatException>();
+
+            ParseHelpers.TryParseInt64("", 0, 0).Should().Be(null);
+
             /*
             "   123  "->NumberNode(123)
             " +123, -123a,  -123  "->NumberNode(123), ContentNode(" -123a"), NumberNode(-123)

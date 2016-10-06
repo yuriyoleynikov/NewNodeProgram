@@ -16,15 +16,13 @@ namespace NodeProg
             bool allowTrailingWhitespace = true)
         {
             if (input == null)
-                throw new FormatException("input == null");
+                throw new ArgumentNullException(nameof(input));
             if (startIndex < 0)
-                throw new FormatException("startIndex < 0");
+                throw new ArgumentException("Argument must not be negative", nameof(startIndex));
             if (length < 0)
-                throw new FormatException("length < 0");
-            if (startIndex > input.Length)
-                throw new FormatException("startIndex > input.Length");
-            if (length > input.Length)
-                throw new FormatException("length > input.Length");
+                throw new ArgumentException("Argument must not be negative", nameof(length));            
+            if (input.Length < startIndex + length)
+                throw new FormatException("input.Length < startIndex + length");
 
             if (length == 0)
                 return null;
@@ -45,8 +43,8 @@ namespace NodeProg
 
             if (position == startIndex + length)
                 return null;
-            else
-                current = input[position];
+
+            current = input[position];
 
             var minusFlag = false;
 
@@ -59,8 +57,8 @@ namespace NodeProg
 
             if (position == startIndex + length)
                 return null;
-            else
-                current = input[position];
+
+            current = input[position];
 
             long value = 0;
 
@@ -100,8 +98,8 @@ namespace NodeProg
 
             if (position == startIndex + length)
                 return value;
-            else
-                current = input[position];
+
+            current = input[position];
 
 
             if (allowTrailingWhitespace)
@@ -115,9 +113,7 @@ namespace NodeProg
                 }
             }
             else
-            {
                 return null;
-            }
 
             return value;
         }
