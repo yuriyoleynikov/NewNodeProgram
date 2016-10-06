@@ -16,8 +16,8 @@ namespace NodeTests
             new Action(() => ParseHelpers.TryParseInt64(null, 0, 0)).ShouldThrow<ArgumentNullException>();
             new Action(() => ParseHelpers.TryParseInt64(str, -1, 10)).ShouldThrow<ArgumentException>();
             new Action(() => ParseHelpers.TryParseInt64(str, 0, -1)).ShouldThrow<ArgumentException>();
-            new Action(() => ParseHelpers.TryParseInt64(str, 20, 0)).ShouldThrow<FormatException>();
-            new Action(() => ParseHelpers.TryParseInt64(str, 0, 30)).ShouldThrow<FormatException>();
+            new Action(() => ParseHelpers.TryParseInt64(str, 20, 0)).ShouldThrow<ArgumentException>();
+            new Action(() => ParseHelpers.TryParseInt64(str, 0, 30)).ShouldThrow<ArgumentException>();
 
             str = " 1 ";
             Assert.AreEqual(ParseHelpers.TryParseInt64(str, 0, str.Length), 1);
@@ -64,7 +64,7 @@ namespace NodeTests
             Assert.AreEqual(ParseHelpers.TryParseInt64(str, 0, str.Length, true, false), null);
             Assert.AreEqual(ParseHelpers.TryParseInt64(str, 0, str.Length, false, true), null);
 
-            new Action(() => ParseHelpers.TryParseInt64(" ", 1, 1)).ShouldThrow<FormatException>();
+            new Action(() => ParseHelpers.TryParseInt64(" ", 1, 1)).ShouldThrow<ArgumentException>();
 
             ParseHelpers.TryParseInt64("", 0, 0).Should().Be(null);
 

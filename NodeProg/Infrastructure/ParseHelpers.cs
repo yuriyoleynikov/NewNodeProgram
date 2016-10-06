@@ -20,73 +20,57 @@ namespace NodeProg
             if (startIndex < 0)
                 throw new ArgumentException("Argument must not be negative", nameof(startIndex));
             if (length < 0)
-                throw new ArgumentException("Argument must not be negative", nameof(length));            
+                throw new ArgumentException("Argument must not be negative", nameof(length));
             if (input.Length < startIndex + length)
-                throw new FormatException("input.Length < startIndex + length");
+                throw new ArgumentException("input.Length < startIndex + length", nameof(length));
 
             if (length == 0)
                 return null;
 
             var position = startIndex;
             var current = input[position];
+            var endIndex = startIndex + length;
 
             if (allowLeadingWhitespace)
             {
-                while (position < startIndex + length)
+                while (position < endIndex)
                 {
                     current = input[position];
                     if (current != ' ' && current != '\t')
                         break;
                     position++;
                 }
+                if (position == endIndex)
+                    return null;
+                current = input[position];
             }
 
-            if (position == startIndex + length)
-                return null;
-
-            current = input[position];
-
-            var minusFlag = false;
+            var minus = 1;
 
             if (current == '+' || current == '-')
             {
                 if (current == '-')
-                    minusFlag = true;
+                    minus = -1;
                 position++;
+                if (position == endIndex)
+                    return null;
+                current = input[position];
             }
-
-            if (position == startIndex + length)
-                return null;
-
-            current = input[position];
 
             long value = 0;
 
-            while (position < startIndex + length)
+            while (position < endIndex)
             {
                 current = input[position];
 
                 if (current < '0' || current > '9')
-                {
                     break;
-                }
 
                 try
                 {
-                    if (!minusFlag)
+                    checked
                     {
-                        checked
-                        {
-
-                            value = value * 10 + (current - '0');
-                        }
-                    }
-                    else
-                    {
-                        checked
-                        {
-                            value = value * 10 - (current - '0');
-                        }
+                        value = value * 10 + (current - '0') * minus;
                     }
                 }
                 catch
@@ -96,15 +80,9 @@ namespace NodeProg
                 position++;
             }
 
-            if (position == startIndex + length)
-                return value;
-
-            current = input[position];
-
-
             if (allowTrailingWhitespace)
             {
-                while (position < startIndex + length)
+                while (position < endIndex)
                 {
                     current = input[position];
                     if (current != ' ' && current != '\t')
@@ -112,10 +90,11 @@ namespace NodeProg
                     position++;
                 }
             }
-            else
-                return null;
 
-            return value;
+            if (position == endIndex)
+                return value;
+
+            return null;
         }
     }
 }
