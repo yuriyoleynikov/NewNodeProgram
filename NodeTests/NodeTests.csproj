@@ -73,6 +73,7 @@
     <Compile Include="Tests\ParseNodesTests.cs" />
     <Compile Include="Tests\ListNodeEqualityTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\TryParseInt64TestsMethod.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NodeProg\NodeProg.csproj">

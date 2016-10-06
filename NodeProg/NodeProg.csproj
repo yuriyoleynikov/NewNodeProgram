@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Infrastructure\ParseHelpers.cs" />
     <Compile Include="Infrastructure\CommentNode.cs" />
     <Compile Include="Infrastructure\ContentNode.cs" />
     <Compile Include="Infrastructure\ListNode.cs" />

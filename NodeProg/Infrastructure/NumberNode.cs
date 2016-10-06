@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -21,14 +22,11 @@ namespace NodeProg
                 .Min() ?? input.Length;
 
             var numberLength = stopMarkerIndex - index;
-            var numberString = input.Substring(index, numberLength);
 
-            long value;
-
-            if (Int64.TryParse(numberString.Trim(), out value))
-                return new NodeParseResult { Node = new NumberNode(value), StartPosition = index, Length = numberLength };
+            var value = ParseHelpers.TryParseInt64(input, index, numberLength);
+            if (value != null)
+                return new NodeParseResult { Node = new NumberNode(value.Value), StartPosition = index, Length = numberLength };
             return null;
-
-        }
+        }        
     }
 }

@@ -13,12 +13,16 @@ namespace NodeTests
             Node.ParseNodes("1,2").Should().Equal(
                 new NumberNode(1),
                 new NumberNode(2));
+            Node.ParseNodes(" ").Should().Equal(
+                new ContentNode(" "));
 
             Node.ParseNodes("           -12").Should().Equal(new NumberNode(-12));
 
             Node.ParseNodes("           +12     ").Should().Equal(new NumberNode(12));
 
             Node.ParseNodes("123").Should().Equal(new NumberNode(123));
+
+            Node.ParseNodes(" -123a").Should().Equal(new ContentNode(" -123a"));
 
             Node.ParseNodes(" +123, -123a,  -123  ").Should().Equal(new NumberNode(123), new ContentNode(" -123a"), new NumberNode(-123));
 
