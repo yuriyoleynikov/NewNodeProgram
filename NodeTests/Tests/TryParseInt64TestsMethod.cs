@@ -50,7 +50,6 @@ namespace NodeTests
             str = "         -9223372036854775809     ";
             Assert.AreEqual(ParseHelpers.TryParseInt64(str, 0, str.Length), null);
 
-
             str = "1 ";
             Assert.AreEqual(ParseHelpers.TryParseInt64(str, 0, str.Length, false, false), null);
 
@@ -67,6 +66,7 @@ namespace NodeTests
             new Action(() => ParseHelpers.TryParseInt64(" ", 1, 1)).ShouldThrow<ArgumentException>();
 
             ParseHelpers.TryParseInt64("", 0, 0).Should().Be(null);
+            ParseHelpers.TryParseInt64(" ", 0, 1).Should().Be(null);
 
             /*
             "   123  "->NumberNode(123)
