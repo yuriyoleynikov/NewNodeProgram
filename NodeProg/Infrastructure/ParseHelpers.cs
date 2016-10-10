@@ -25,80 +25,7 @@ namespace NodeProg
             if (input.Length < startIndex + length)
                 throw new ArgumentException("input.Length < startIndex + length", nameof(length));
 
-            return TryParseInt64(input.Skip(startIndex).Take(length), allowLeadingWhitespace, allowTrailingWhitespace);
-            /*
-            if (length == 0)
-                return null;
-
-            var position = startIndex;
-            var current = input[position];
-            var endIndex = startIndex + length;
-
-            if (allowLeadingWhitespace)
-            {
-                while (position < endIndex)
-                {
-                    current = input[position];
-                    if (current != ' ' && current != '\t')
-                        break;
-                    position++;
-                }
-                if (position == endIndex)
-                    return null;
-                current = input[position];
-            }
-
-            var minus = 1;
-
-            if (current == '+' || current == '-')
-            {
-                if (current == '-')
-                    minus = -1;
-                position++;
-                if (position == endIndex)
-                    return null;
-                current = input[position];
-            }
-
-            long value = 0;
-
-            while (position < endIndex)
-            {
-                current = input[position];
-
-                if (current < '0' || current > '9')
-                    break;
-
-                try
-                {
-                    checked
-                    {
-                        value = value * 10 + (current - '0') * minus;
-                    }
-                }
-                catch
-                {
-                    return null;
-                }
-                position++;
-            }
-
-            if (allowTrailingWhitespace)
-            {
-                while (position < endIndex)
-                {
-                    current = input[position];
-                    if (current != ' ' && current != '\t')
-                        return null;
-                    position++;
-                }
-            }
-
-            if (position == endIndex)
-                return value;
-
-            return null;
-            */
+            return TryParseInt64(inputEnumerable(input, startIndex, length), allowLeadingWhitespace, allowTrailingWhitespace);
         }
         public static long? TryParseInt64(
             IEnumerable<char> input,
@@ -163,6 +90,14 @@ namespace NodeProg
 
                 return value;
             }
+        }
+        public static IEnumerable<char> inputEnumerable(string input, int startIndex, int length)
+        {
+            for (int index = startIndex; index < startIndex + length; index++)
+            {
+                yield return input[index];
+            }
+            yield break;
         }
     }
 }
