@@ -12,7 +12,8 @@ namespace NodeTests
         public void ParseHelpersToEnumerableTestMethod()
         {
             ParseHelpers.ToEnumerable("abcd", 1, 2).Should().Equal(new char[] { 'b', 'c' });
-
+            
+            
             var str = "123,456";
             new Action(() => ParseHelpers.ToEnumerable(null, 0, 0)).ShouldThrow<ArgumentNullException>();
             new Action(() => ParseHelpers.ToEnumerable(str, -1, 10)).ShouldThrow<ArgumentException>();

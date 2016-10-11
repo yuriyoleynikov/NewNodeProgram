@@ -35,60 +35,46 @@ namespace NodeProg
             if (input == null)
                 throw new ArgumentNullException(nameof(input));
 
-            using (var iChar = input.GetEnumerator())
+            using (var enumerator = input.GetEnumerator())
             {
-                if (!iChar.MoveNext())
+                if (!enumerator.MoveNext())
                     return null;
 
                 if (allowLeadingWhitespace)
-                    while (Char.IsWhiteSpace(iChar.Current))
-                        if (!iChar.MoveNext())
+                    while (char.IsWhiteSpace(enumerator.Current))
+                        if (!enumerator.MoveNext())
                             return null;
 
                 var minus = 1;
-                if (iChar.Current == '+' || iChar.Current == '-')
+                if (enumerator.Current == '+' || enumerator.Current == '-')
                 {
-                    if (iChar.Current == '-')
+                    if (enumerator.Current == '-')
                         minus = -1;
-                    if (!iChar.MoveNext())
+                    if (!enumerator.MoveNext())
                         return null;
                 }
 
                 long value = 0;
-                var iCharMN = true;
-                do
+                while (char.IsDigit(enumerator.Current))
                 {
-                    if (!Char.IsDigit(iChar.Current))
-                        break;
                     try
                     {
-                        checked
-                        {
-                            value = value * 10 + minus * (iChar.Current - '0');
-                        }
+                        value = checked(value * 10 + minus * (enumerator.Current - '0'));
                     }
                     catch (OverflowException)
                     {
                         return null;
                     }
-                    iCharMN = iChar.MoveNext();
-                } while (iCharMN);
-
-                if (!iCharMN)
-                    return value;
+                    if (!enumerator.MoveNext())
+                        return value;
+                }
 
                 if (allowTrailingWhitespace)
-                {
-                    do
-                    {
-                        if (!Char.IsWhiteSpace(iChar.Current))
-                            return null;
-                    } while (iChar.MoveNext());
-                }
-                else
-                    return null;
+                    while (char.IsWhiteSpace(enumerator.Current))
+                        if (!enumerator.MoveNext())
+                            return value;
 
-                return value;
+                return null;
             }
         }
 
@@ -103,6 +89,11 @@ namespace NodeProg
             if (input.Length < startIndex + length)
                 throw new ArgumentException("input.Length < startIndex + length", nameof(length));
 
+            return ToEnumerableInternal(input, startIndex, length);
+        }
+
+        private static IEnumerable<char> ToEnumerableInternal(this string input, int startIndex, int length)
+        {
             for (int index = startIndex; index < startIndex + length; index++)
             {
                 yield return input[index];
