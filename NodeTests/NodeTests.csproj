@@ -70,6 +70,7 @@
     <Compile Include="Tests\NumberNodeTests\NumberNodeEqualityTests.cs" />
     <Compile Include="Tests\NumberNodeTests\NumberNodeToStringTests.cs" />
     <Compile Include="Tests\NumberNodeTests\ParseNodesForNumberNodeTests.cs" />
+    <Compile Include="Tests\ParseHelpersToEnumerableTests.cs" />
     <Compile Include="Tests\ParseNodesTests.cs" />
     <Compile Include="Tests\ListNodeEqualityTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

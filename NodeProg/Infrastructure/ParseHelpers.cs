@@ -15,7 +15,6 @@ namespace NodeProg
             bool allowLeadingWhitespace = true,
             bool allowTrailingWhitespace = true)
         {
-
             if (input == null)
                 throw new ArgumentNullException(nameof(input));
             if (startIndex < 0)
@@ -25,8 +24,9 @@ namespace NodeProg
             if (input.Length < startIndex + length)
                 throw new ArgumentException("input.Length < startIndex + length", nameof(length));
 
-            return TryParseInt64(inputEnumerable(input, startIndex, length), allowLeadingWhitespace, allowTrailingWhitespace);
+            return TryParseInt64(input.ToEnumerable(startIndex, length), allowLeadingWhitespace, allowTrailingWhitespace);
         }
+
         public static long? TryParseInt64(
             IEnumerable<char> input,
             bool allowLeadingWhitespace = true,
@@ -41,7 +41,7 @@ namespace NodeProg
                     return null;
 
                 if (allowLeadingWhitespace)
-                    while (iChar.Current == ' ' || iChar.Current == '\t')
+                    while (Char.IsWhiteSpace(iChar.Current))
                         if (!iChar.MoveNext())
                             return null;
 
@@ -58,7 +58,7 @@ namespace NodeProg
                 var iCharMN = true;
                 do
                 {
-                    if (iChar.Current < '0' || iChar.Current > '9')
+                    if (!Char.IsDigit(iChar.Current))
                         break;
                     try
                     {
@@ -67,21 +67,21 @@ namespace NodeProg
                             value = value * 10 + minus * (iChar.Current - '0');
                         }
                     }
-                    catch
+                    catch (OverflowException)
                     {
                         return null;
                     }
                     iCharMN = iChar.MoveNext();
                 } while (iCharMN);
 
-
                 if (!iCharMN)
                     return value;
+
                 if (allowTrailingWhitespace)
                 {
                     do
                     {
-                        if (iChar.Current != ' ' && iChar.Current != '\t')
+                        if (!Char.IsWhiteSpace(iChar.Current))
                             return null;
                     } while (iChar.MoveNext());
                 }
@@ -91,13 +91,22 @@ namespace NodeProg
                 return value;
             }
         }
-        public static IEnumerable<char> inputEnumerable(string input, int startIndex, int length)
+
+        public static IEnumerable<char> ToEnumerable(this string input, int startIndex, int length)
         {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+            if (startIndex < 0)
+                throw new ArgumentException("Argument must not be negative", nameof(startIndex));
+            if (length < 0)
+                throw new ArgumentException("Argument must not be negative", nameof(length));
+            if (input.Length < startIndex + length)
+                throw new ArgumentException("input.Length < startIndex + length", nameof(length));
+
             for (int index = startIndex; index < startIndex + length; index++)
             {
                 yield return input[index];
             }
-            yield break;
         }
     }
 }
