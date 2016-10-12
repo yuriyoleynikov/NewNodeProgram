@@ -24,77 +24,80 @@ namespace NodeProg
             if (input.Length < startIndex + length)
                 throw new ArgumentException("input.Length < startIndex + length", nameof(length));
 
-            if (length == 0)
-                return null;
+            return TryParseInt64(input.ToEnumerable(startIndex, length), allowLeadingWhitespace, allowTrailingWhitespace);
+        }
 
-            var position = startIndex;
-            var current = input[position];
-            var endIndex = startIndex + length;
+        public static long? TryParseInt64(
+            IEnumerable<char> input,
+            bool allowLeadingWhitespace = true,
+            bool allowTrailingWhitespace = true)
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
 
-            if (allowLeadingWhitespace)
+            using (var enumerator = input.GetEnumerator())
             {
-                while (position < endIndex)
-                {
-                    current = input[position];
-                    if (current != ' ' && current != '\t')
-                        break;
-                    position++;
-                }
-                if (position == endIndex)
+                if (!enumerator.MoveNext())
                     return null;
-                current = input[position];
-            }
 
-            var minus = 1;
+                if (allowLeadingWhitespace)
+                    while (char.IsWhiteSpace(enumerator.Current))
+                        if (!enumerator.MoveNext())
+                            return null;
 
-            if (current == '+' || current == '-')
-            {
-                if (current == '-')
-                    minus = -1;
-                position++;
-                if (position == endIndex)
-                    return null;
-                current = input[position];
-            }
-
-            long value = 0;
-
-            while (position < endIndex)
-            {
-                current = input[position];
-
-                if (current < '0' || current > '9')
-                    break;
-
-                try
+                var minus = 1;
+                if (enumerator.Current == '+' || enumerator.Current == '-')
                 {
-                    checked
-                    {
-                        value = value * 10 + (current - '0') * minus;
-                    }
-                }
-                catch
-                {
-                    return null;
-                }
-                position++;
-            }
-
-            if (allowTrailingWhitespace)
-            {
-                while (position < endIndex)
-                {
-                    current = input[position];
-                    if (current != ' ' && current != '\t')
+                    if (enumerator.Current == '-')
+                        minus = -1;
+                    if (!enumerator.MoveNext())
                         return null;
-                    position++;
                 }
+
+                long value = 0;
+                while (char.IsDigit(enumerator.Current))
+                {
+                    try
+                    {
+                        value = checked(value * 10 + minus * (enumerator.Current - '0'));
+                    }
+                    catch (OverflowException)
+                    {
+                        return null;
+                    }
+                    if (!enumerator.MoveNext())
+                        return value;
+                }
+
+                if (allowTrailingWhitespace)
+                    while (char.IsWhiteSpace(enumerator.Current))
+                        if (!enumerator.MoveNext())
+                            return value;
+
+                return null;
             }
+        }
 
-            if (position == endIndex)
-                return value;
+        public static IEnumerable<char> ToEnumerable(this string input, int startIndex, int length)
+        {
+            if (input == null)
+                throw new ArgumentNullException(nameof(input));
+            if (startIndex < 0)
+                throw new ArgumentException("Argument must not be negative", nameof(startIndex));
+            if (length < 0)
+                throw new ArgumentException("Argument must not be negative", nameof(length));
+            if (input.Length < startIndex + length)
+                throw new ArgumentException("input.Length < startIndex + length", nameof(length));
 
-            return null;
+            return ToEnumerableInternal(input, startIndex, length);
+        }
+
+        private static IEnumerable<char> ToEnumerableInternal(this string input, int startIndex, int length)
+        {
+            for (int index = startIndex; index < startIndex + length; index++)
+            {
+                yield return input[index];
+            }
         }
     }
 }
